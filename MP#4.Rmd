@@ -1,0 +1,26 @@
+---
+title: "MP#4"
+author: "Kareen Seignon"
+date: "4/28/2018"
+output: html_document
+---
+
+```{r}
+library(mdsr)
+library(RMySQL)
+db <- dbConnect_scidb(dbname = "imdb")
+```
+
+```{r}
+class(db)
+```
+#Query from SQL to get a table with the title of movies, production year, and genre. the title table was joined to the movie_info table. the info_tyoe_id = 3 to get inforamtion about the genre in the movie_info table
+
+```{r}
+db %>%
+  dbGetQuery("SELECT  title,production_year,info  
+FROM title
+JOIN movie_info ON movie_id = title.id
+WHERE info_type_id = 3;")
+```
+
