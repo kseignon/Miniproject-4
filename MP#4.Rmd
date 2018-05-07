@@ -23,4 +23,371 @@ FROM title
 JOIN movie_info ON movie_id = title.id
 WHERE info_type_id = 3;")
 ```
+```{r}
+library(mdsr)
+library(RMySQL)
+db <- dbConnect_scidb(dbname = "imdb")
+db %>%
+  dbGetQuery("SELECT * FROM kind_type;")
+```
+
+```{r}
+class(db)
+```
+
+```{r}
+films <- db %>% 
+  dbGetQuery("SELECT production_year, COUNT(*) as num_films
+FROM imdb.title
+WHERE kind_id = 1
+GROUP BY production_year;")
+```
+
+```{r}
+action_films <- db %>% 
+  dbGetQuery("SELECT production_year, COUNT(*) as action_films
+FROM imdb.movie_info
+JOIN title ON movie_info.movie_id = title.id 
+WHERE info_type_id = 3
+AND info LIKE '%action%'
+AND kind_id = 1
+GROUP BY production_year;")
+```
+
+```{r}
+movies <- films %>%
+  left_join(action_films, by="production_year")
+
+#Replace NA values with zeros
+na.zero <- function (x) {
+    x[is.na(x)] <- 0
+    return(x)
+}
+```
+
+```{r}
+db <- dbConnect_scidb(dbname = "imdb")
+data<-db %>%
+  dbGetQuery("SELECT title, info_type_id, production_year
+      FROM title
+      JOIN movie_info
+      ON title.id = movie_info.movie_id
+      WHERE info_type_id = 3
+      #action movies between 1980 to 2015
+      AND  production_year >= 1980
+      AND production_year <=  2015
+      AND info = 'Western'
+      ORDER BY production_year")
+```
+
+
+
+```{r}
+glimpse(data)
+graph <- ggplot(data,aes(production_year)) + 
+  geom_bar(fill= 'red') +
+labs(title = "action Films", x ="Production Year", y = "Count")
+graph + theme(panel.background = element_rect(fill = "black", colour = "red", size = 0.5, linetype = "solid"),
+  panel.grid.major = element_line(size = 0.5,
+                                  linetype = "solid",
+                                  colour = "black"),
+  panel.grid.minor = element_line(size = 0.25,
+                                  linetype = 'solid',
+                                  colour = "white"))
+```
+
+```{r}
+library(mdsr)
+library(RMySQL)
+db <- dbConnect_scidb(dbname = "imdb")
+db %>%
+  dbGetQuery("SELECT * FROM kind_type;")
+```
+
+```{r}
+class(db)
+```
+
+```{r}
+films <- db %>% 
+  dbGetQuery("SELECT production_year, COUNT(*) as num_films
+FROM imdb.title
+WHERE kind_id = 1
+GROUP BY production_year;")
+```
+
+```{r}
+action_films <- db %>% 
+  dbGetQuery("SELECT production_year, COUNT(*) as action_films
+FROM imdb.movie_info
+JOIN title ON movie_info.movie_id = title.id 
+WHERE info_type_id = 3
+AND info LIKE '%action%'
+AND kind_id = 1
+GROUP BY production_year;")
+```
+
+```{r}
+movies <- films %>%
+  left_join(action_films, by="production_year")
+
+#Replace NA values with zeros
+na.zero <- function (x) {
+    x[is.na(x)] <- 0
+    return(x)
+}
+```
+
+```{r}
+db <- dbConnect_scidb(dbname = "imdb")
+data<-db %>%
+  dbGetQuery("SELECT title, info_type_id, production_year
+      FROM title
+      JOIN movie_info
+      ON title.id = movie_info.movie_id
+      WHERE info_type_id = 3
+      #action movies between 1980 to 2015
+      AND  production_year >= 1980
+      AND production_year <=  2015
+      AND info = 'Western'
+      ORDER BY production_year")
+```
+
+
+
+```{r}
+glimpse(data)
+graph <- ggplot(data,aes(production_year)) + 
+  geom_bar(fill= 'red') +
+labs(title = "action Films", x ="Production Year", y = "Count")
+graph + theme(panel.background = element_rect(fill = "black", colour = "red", size = 0.5, linetype = "solid"),
+  panel.grid.major = element_line(size = 0.5,
+                                  linetype = "solid",
+                                  colour = "black"),
+  panel.grid.minor = element_line(size = 0.25,
+                                  linetype = 'solid',
+                                  colour = "white"))
+```
+
+
+```{r}
+films <- db %>% 
+  dbGetQuery("SELECT production_year, COUNT(*) as num_films
+FROM imdb.title
+WHERE kind_id = 1
+GROUP BY production_year;")
+```
+
+```{r}
+action_films <- db %>% 
+  dbGetQuery("SELECT production_year, COUNT(*) as action_films
+FROM imdb.movie_info
+JOIN title ON movie_info.movie_id = title.id 
+WHERE info_type_id = 3
+AND info LIKE '%action%'
+AND kind_id = 1
+GROUP BY production_year;")
+```
+
+```{r}
+movies <- films %>%
+  left_join(action_films, by="production_year")
+
+#Replace NA values with zeros
+na.zero <- function (x) {
+    x[is.na(x)] <- 0
+    return(x)
+}
+```
+
+```{r}
+db <- dbConnect_scidb(dbname = "imdb")
+data<-db %>%
+  dbGetQuery("SELECT title, info_type_id, production_year
+      FROM title
+      JOIN movie_info
+      ON title.id = movie_info.movie_id
+      WHERE info_type_id = 3
+      #action movies between 1980 to 2015
+      AND  production_year >= 1980
+      AND production_year <=  2015
+      AND info = 'Western'
+      ORDER BY production_year")
+```
+
+
+
+```{r}
+glimpse(data)
+graph <- ggplot(data,aes(production_year)) + 
+  geom_bar(fill= 'red') +
+labs(title = "action Films", x ="Production Year", y = "Count")
+graph + theme(panel.background = element_rect(fill = "black", colour = "red", size = 0.5, linetype = "solid"),
+  panel.grid.major = element_line(size = 0.5,
+                                  linetype = "solid",
+                                  colour = "black"),
+  panel.grid.minor = element_line(size = 0.25,
+                                  linetype = 'solid',
+                                  colour = "white"))
+```
+
+```{r}
+library(mdsr)
+library(RMySQL)
+db <- dbConnect_scidb(dbname = "imdb")
+db %>%
+  dbGetQuery("SELECT * FROM kind_type;")
+```
+
+```{r}
+class(db)
+```
+
+```{r}
+films <- db %>% 
+  dbGetQuery("SELECT production_year, COUNT(*) as num_films
+FROM imdb.title
+WHERE kind_id = 1
+GROUP BY production_year;")
+```
+
+```{r}
+action_films <- db %>% 
+  dbGetQuery("SELECT production_year, COUNT(*) as action_films
+FROM imdb.movie_info
+JOIN title ON movie_info.movie_id = title.id 
+WHERE info_type_id = 3
+AND info LIKE '%action%'
+AND kind_id = 1
+GROUP BY production_year;")
+```
+
+```{r}
+movies <- films %>%
+  left_join(action_films, by="production_year")
+
+#Replace NA values with zeros
+na.zero <- function (x) {
+    x[is.na(x)] <- 0
+    return(x)
+}
+```
+
+```{r}
+db <- dbConnect_scidb(dbname = "imdb")
+data<-db %>%
+  dbGetQuery("SELECT title, info_type_id, production_year
+      FROM title
+      JOIN movie_info
+      ON title.id = movie_info.movie_id
+      WHERE info_type_id = 3
+      #action movies between 1980 to 2015
+      AND  production_year >= 1980
+      AND production_year <=  2015
+      AND info = 'Western'
+      ORDER BY production_year")
+```
+
+
+
+```{r}
+glimpse(data)
+graph <- ggplot(data,aes(production_year)) + 
+  geom_bar(fill= 'red') +
+labs(title = "action Films", x ="Production Year", y = "Count")
+graph + theme(panel.background = element_rect(fill = "black", colour = "red", size = 0.5, linetype = "solid"),
+  panel.grid.major = element_line(size = 0.5,
+                                  linetype = "solid",
+                                  colour = "black"),
+  panel.grid.minor = element_line(size = 0.25,
+                                  linetype = 'solid',
+                                  colour = "white"))
+```
+
+
+```{r}
+db <- dbConnect_scidb(dbname = "imdb")
+Data_Comedy <- db %>%
+  dbGetQuery("SELECT production_year, info, count() 
+FROM title
+JOIN movie_info ON movie_id = title.id
+WHERE info_type_id = 3
+AND info LIKE '%comedy%'
+AND kind_id = 1
+AND  production_year >= 1980
+      AND production_year <=  2015
+
+GROUP BY production_year;")
+```
+
+```{r}
+graph <- ggplot(Data_Comedy,aes(production_year)) + 
+  geom_bar(fill= 'red') +
+labs(title = "Comedy", x ="Production Year", y = "Count")
+graph + theme(panel.background = element_rect(fill = "black", colour = "red", size = 0.5, linetype = "solid"),
+  panel.grid.major = element_line(size = 0.5,
+                                  linetype = "solid",
+                                  colour = "black"),
+  panel.grid.minor = element_line(size = 0.25,
+                                  linetype = 'solid',
+                                  colour = "white"))
+```
+
+```{r}
+db <- dbConnect_scidb(dbname = "imdb")
+Data_Comedy <- db %>%
+  dbGetQuery ("SELECT (10 * floor (production_year/ 10)) AS Decades, count(*) AS Count, info 
+FROM title
+JOIN movie_info ON movie_id = title.id
+WHERE info_type_id = 3
+AND info LIKE '%comedy%'
+AND kind_id = 1
+AND  production_year >= 1980
+      AND production_year <=  2015
+GROUP BY Decades;")
+```
+
+```{r}
+graph <- ggplot(Data_Comedy,aes(x = Decades, y = Count)) + 
+  geom_line() +
+labs(title = "Comedy films", x ="Production_by_Decades", y = "Count")
+graph + theme(panel.background = element_rect(fill = "white", colour = "red", size = 0.5, linetype = "solid"),
+  panel.grid.major = element_line(size = 0.5,
+                                  linetype = "solid",
+                                  colour = "white"),
+  panel.grid.minor = element_line(size = 0.25,
+                                  linetype = 'solid',
+                                  colour = "white"))
+```
+
+```{r}
+db <- dbConnect_scidb(dbname = "imdb")
+Data_Comedy <- db %>%
+  dbGetQuery ("SELECT (10 * floor (production_year/ 10)) AS Decades, count(*) AS Count, info 
+FROM title
+JOIN movie_info ON movie_id = title.id
+WHERE info_type_id = 3
+AND info LIKE '%drama%'
+AND kind_id = 1
+AND  production_year >= 1980
+      AND production_year <=  2015
+GROUP BY Decades;")
+```
+
+```{r}
+graph <- ggplot(Data_Comedy,aes(production_year)) + 
+  geom_bar(fill= 'red') +
+labs(title = "action Films", x ="Production Year", y = "Count")
+graph + theme(panel.background = element_rect(fill = "black", colour = "red", size = 0.5, linetype = "solid"),
+  panel.grid.major = element_line(size = 0.5,
+                                  linetype = "solid",
+                                  colour = "black"),
+  panel.grid.minor = element_line(size = 0.25,
+                                  linetype = 'solid',
+                                  colour = "white"))
+```
+
+
+
+
 
