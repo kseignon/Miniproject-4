@@ -1,12 +1,14 @@
 ---
-title: "MP#4 Trial2"
-author: "Kareen Seignon"
-date: "5/10/2018"
-output: html_document
+title: "MP#4"
+author: "Vanessa, Kareen, and Maggie"
+date: "May 10, 2018"
+output:
+  html_document:
+    code_folding: hide
 ---
 #Loading the libraries
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 library(mdsr)
 library(RMySQL)
 db <- dbConnect_scidb(dbname = "imdb")
