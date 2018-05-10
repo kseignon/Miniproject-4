@@ -1,0 +1,155 @@
+---
+title: "MP#4 Trial2"
+author: "Kareen Seignon"
+date: "5/10/2018"
+output: html_document
+---
+#Loading the libraries
+
+```{r}
+library(mdsr)
+library(RMySQL)
+db <- dbConnect_scidb(dbname = "imdb")
+```
+```{r}
+library(ggplot2)
+```
+
+```{r}
+class(db)
+```
+
+#Query from SQL to get a table with the title of movies, production year, and genre. the title table is joined to the movie_info table. the info_type_id = 3 to get information about the genre in the movie_info table
+```{r}
+db %>%
+  dbGetQuery("SELECT  title,production_year,info  
+FROM title
+JOIN movie_info ON movie_id = title.id
+WHERE info_type_id = 3;")
+```
+
+#Looking for trends in comedy genre over four decades
+```{r}
+db <- dbConnect_scidb(dbname = "imdb")
+Data_Comedy <- db %>%
+  dbGetQuery ("SELECT (10 * floor (production_year/ 10)) AS Decades, count(*) AS Count, info AS Genre
+FROM title
+JOIN movie_info ON movie_id = title.id
+WHERE info_type_id = 3
+AND info LIKE '%comedy%'
+AND kind_id = 1
+AND  production_year >= 1980
+      AND production_year <=  2015
+GROUP BY Decades;")
+```
+```{r}
+graph <- ggplot(Data_Comedy,aes(x = Decades, y = Count)) + 
+  geom_line() +
+labs(title = "Comedy Films", x ="Production_by_Decades", y = "Count")
+graph + theme(panel.background = element_rect(fill = "white", colour = "red", size = 0.5, linetype = "solid"),
+  panel.grid.major = element_line(size = 0.5,
+                                  linetype = "solid",
+                                  colour = "white"),
+  panel.grid.minor = element_line(size = 0.25,
+                                  linetype = 'solid',
+                                  colour = "white"))
+```
+
+
+#Looking for trends in musical genre over four decades
+```{r}
+db <- dbConnect_scidb(dbname = "imdb")
+Data_musical<- db %>%
+  dbGetQuery ("SELECT (10 * floor (production_year/ 10)) AS Decades, count(*) AS Count, info AS Genre
+FROM title
+JOIN movie_info ON movie_id = title.id
+WHERE info_type_id = 3
+AND info LIKE '%musical%'
+AND kind_id = 1
+AND  production_year >= 1980
+      AND production_year <=  2015
+GROUP BY Decades;")
+```
+```{r}
+graph <- ggplot(Data_musical,aes(x = Decades, y = Count)) + 
+  geom_line() +
+labs(title = "Musical", x ="Production_by_Decades", y = "Count")
+graph + theme(panel.background = element_rect(fill = "white", colour = "red", size = 0.5, linetype = "solid"),
+  panel.grid.major = element_line(size = 0.5,
+                                  linetype = "solid",
+                                  colour = "white"),
+  panel.grid.minor = element_line(size = 0.25,
+                                  linetype = 'solid',
+                                  colour = "white"))
+```
+
+#Looking for trends in sci-fi genre over four decades
+```{r}
+db <- dbConnect_scidb(dbname = "imdb")
+Data_scifi<- db %>%
+  dbGetQuery ("SELECT (10 * floor (production_year/ 10)) AS Decades, count(*) AS Count, info AS Genre
+FROM title
+JOIN movie_info ON movie_id = title.id
+WHERE info_type_id = 3
+AND info LIKE '%sci-fi%'
+AND kind_id = 1
+AND  production_year >= 1980
+      AND production_year <=  2015
+GROUP BY Decades;")
+```
+```{r}
+graph <- ggplot(Data_scifi,aes(x = Decades, y = Count)) + 
+  geom_line() +
+labs(title = "Sci-fi", x ="Production_by_Decades", y = "Count")
+graph + theme(panel.background = element_rect(fill = "white", colour = "red", size = 0.5, linetype = "solid"),
+  panel.grid.major = element_line(size = 0.5,
+                                  linetype = "solid",
+                                  colour = "white"),
+  panel.grid.minor = element_line(size = 0.25,
+                                  linetype = 'solid',
+                                  colour = "white"))
+```
+
+#Looking for trends in action films over four decades
+```{r}
+db <- dbConnect_scidb(dbname = "imdb")
+Data_action <- db %>%
+  dbGetQuery ("SELECT (10 * floor (production_year/ 10)) AS Decades, count(*) AS Count, info AS Genre
+FROM title
+JOIN movie_info ON movie_id = title.id
+WHERE info_type_id = 3
+AND info LIKE '%action%'
+AND kind_id = 1
+AND  production_year >= 1980
+      AND production_year <=  2015
+GROUP BY Decades;")
+```
+
+```{r}
+graph <- ggplot(Data_action,aes(x = Decades, y = Count)) + 
+  geom_line() +
+labs(title = "Action Films", x ="Production_by_Decades", y = "Count")
+graph + theme(panel.background = element_rect(fill = "white", colour = "red", size = 0.5, linetype = "solid"),
+  panel.grid.major = element_line(size = 0.5,
+                                  linetype = "solid",
+                                  colour = "white"),
+  panel.grid.minor = element_line(size = 0.25,
+                                  linetype = 'solid',
+                                  colour = "white"))
+```
+
+#Putting all four genres in one graph for comparison 
+```{r}
+All_Films <- bind_rows(
+  Data_action, Data_Comedy,
+  Data_musical, Data_scifi)
+
+ggplot(All_Films, aes(x = Decades, y = Count, color = Genre)) + 
+         geom_line()
+
+```
+
+
+
+
+
